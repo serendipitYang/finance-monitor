@@ -1,5 +1,54 @@
-# HEARTBEAT.md
+# HEARTBEAT.md - Periodic Tasks
 
-# Keep this file empty (or with only comments) to skip heartbeat API calls.
+> 定期检查和监控任务。保持为空则跳过 heartbeat API 调用。
 
-# Add tasks below when you want the agent to check something periodically.
+---
+
+## 📅 已配置的 Cron Jobs
+
+### 1. 每日市场简报 (Daily Market Briefing)
+- **Job ID:** bae49a41-5a96-45b0-8924-2ace84479a9f
+- **时间:** 每天 8:30 AM CST
+- **内容:** 股票市场简报 + 持仓股票动态
+- **推送:** Telegram → Thomas (8798947736)
+- **状态:** ✅ 已启用
+
+---
+
+## 💼 股票监控任务 (Stock Monitoring)
+
+### 持仓股票
+NVDA, TQQQ, MU, BTC, FIG, KLAR, AIRO, RVI
+
+### 监控触发条件
+| 条件 | 阈值 | 操作 |
+|------|------|------|
+| 单日涨幅 | > 5% | 立即发送 Telegram 警报 |
+| 单日跌幅 | > 5% | 立即发送 Telegram 警报 |
+| 成交量异常 | > 200% 日均 | 发送警报 |
+| 重大新闻 | 任何 | 即时推送 |
+
+---
+
+## 🔍 手动检查清单 (备用)
+
+当收到 heartbeat poll 时，可检查：
+
+- [ ] 股价是否触发报警阈值
+- [ ] 是否有重大新闻 (财报、并购、政策)
+- [ ] 加密货币大额转账 (BTC鲸鱼警报)
+- [ ] 分析师评级变化
+
+**注意:** 实时监控将通过专门的 financial-agent 实现，heartbeat 仅作备用检查。
+
+---
+
+## 📝 待添加任务
+
+- [ ] 每小时价格检查 (价格突破/跌破关键位)
+- [ ] 每周分析师报告 (周日 9 AM)
+- [ ] 月度投资组合回顾
+
+---
+
+*最后更新: 2026-02-23*
