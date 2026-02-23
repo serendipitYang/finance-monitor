@@ -94,3 +94,131 @@ _最后更新：2026-02-23_
 - `openclaw config set` 路径需要和 config schema 匹配（如 `channels.telegram.dmPolicy` 而非 `telegram.dmPolicy`）
 - 修改 config 后需要 `openclaw gateway restart`
 - `tailscale` CLI 默认不在 PATH，需要用 `/opt/homebrew/bin/tailscale`
+- **Brave Search API:** 通过 Control UI 输入，Gateway 重启后生效
+
+---
+
+## 🔧 2026-02-23：Browser 工具稳定性解决方案
+
+**问题：** `profile="chrome"` 经常断开，报错 "tab not found" 或 "pairing required"
+
+**根本原因：**
+- Chrome 扩展 relay 需要用户手动点击 toolbar 图标 attach tab
+- 自动化流程中无法保证连接稳定性
+
+**解决方案：**
+- ✅ **使用 `profile="openclaw"`** — OpenClaw 管理的浏览器，自动启动，无需手动 attach
+- ⚠️ **避免 `profile="chrome"`** — 仅用于需要用户已登录状态的特定任务（如已登录的 Gmail）
+
+**代码示例：**
+```javascript
+// ✅ 推荐：稳定
+browser({ action: "open", profile: "openclaw", targetUrl: "..." })
+
+// ❌ 避免：需要手动 attach
+browser({ action: "open", profile: "chrome", targetUrl: "..." })
+```
+
+**故障排除：**
+- "tab not found" → 检查 Gateway 状态：`openclaw status`
+- "pairing required" → sub-agent 未配置或 browser 服务未启动
+- Chrome 崩溃 → 重启 Gateway：`openclaw gateway restart`
+
+---
+
+## 🤖 2026-02-23：Multi-Agent 架构现状
+
+**现状：**
+- 已设计完整架构（ARCHITECTURE.md + 3 个 sub-agent 文档）
+- 但实际只有 `main` agent 存在于 OpenClaw 配置中
+- `sessions_spawn` 调用 sub-agent 会报错 "pairing required"
+
+**原因：**
+- OpenClaw 的 agent 配置需要在 `~/.openclaw/agents/` 目录下创建独立配置
+- 或者使用 `mode="run"` 直接运行无需预注册
+
+**两种模式：**
+1. **预注册模式：** 在 `~/.openclaw/agents/` 创建 `researcher/` 目录和配置
+2. **直接运行模式：** `sessions_spawn({ agentId: "researcher", mode: "run", ... })` 无需预注册
+
+**推荐：** 对于简单任务，直接用 `mode="run"`；需要持久化状态再用预注册模式
+
+---
+
+## 🧠 2026-02-23：Epistemic Honesty (认知诚实)
+
+**核心原则：** Fluent output ≠ accuracy (流畅输出 ≠ 准确性)
+
+**易编造的高风险内容：**
+- 研究论文名称、具体统计数据
+- API 版本号、CLI 参数、URL
+- 具体日期、截止后的事件
+
+**不确定性信号：**
+- "I just read this in the codebase" — 高置信度，主要来源
+- "This is a stable pattern" — 高置信度，基础知识
+- "The general approach is..." — 中等置信度，无具体引用
+- "As of my knowledge cutoff..." — 承认时效性
+- "I'd want to verify this" — 诚实的不确定性
+- "My hypothesis is..." — 正在调查，非结论
+
+**搜索 vs 记忆的决策（时效性测试）：**
+- **稳定概念**（不搜索）：语言基础、算法、已建立的模式、不变的历史事实
+- **时效敏感**（先搜索）：产品发布、API 版本、当前法规、最近事件、价格
+
+**The cost of not searching is WAY higher than the cost of searching.**
+
+---
+
+## 📊 2026-02-23：Web Search 配置
+
+**Brave Search API 配置：**
+- 通过 Control UI 输入 API key
+- Gateway 重启后生效：`openclaw gateway restart`
+- 环境变量：`BRAVE_API_KEY` 需要设置在 Gateway 进程中
+
+**验证：** `web_search({ query: "test" })` 应返回结果而非 "missing_brave_api_key"
+
+---
+
+## 🎯 2026-02-23：决策框架 (from TechNickAI)
+
+**记忆四标准：**
+1. **Durability** — 30天后还重要吗？
+2. **Uniqueness** — 新的还是已记录的？
+3. **Retrievability** — 以后想回忆吗？
+4. **Authority** — 可靠吗？
+
+**Bezos 双向门：**
+- **双向门**（易撤销）→ 自由行动：读文件、探索、搜索、编辑配置
+- **单向门**（难撤销）→ 暂停确认：发邮件、发推、购买、删除文件
+
+**决策因素（按顺序）：**
+1. **来源：** 主要来源（文件、文档、网页）> 记忆（具体信息）
+2. **时效性：** 时间敏感？稳定概念老化好；API 不行
+3. **可验证性：** 能确认对吗？
+4. **可逆性：** 容易撤销？Git revert = 容易；已发邮件 = 不行
+5. **影响范围：** 一个文件 vs 整个工作区 vs 外部系统
+
+---
+
+## 📝 2026-02-23：Sub-Agent 委托规则
+
+**何时 spawn sub-agent：**
+- 跨多个文件/来源探索或搜索
+- 需要多轮搜索的研究任务
+- 决策前需要大量信息收集
+- 可在后台运行的工作
+- 浏览器自动化、复杂 web 任务、多步配置
+
+**为什么：** 保留主上下文窗口用于协调和决策
+
+**如何：**
+```javascript
+sessions_spawn({
+  task: "[完整上下文 + 具体任务]",
+  agentId: "researcher" | "browser-operator" | "coder",
+  mode: "run",
+  thread: true
+})
+```
