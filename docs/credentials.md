@@ -17,6 +17,7 @@
 | IP (Tailscale) | `100.120.109.51` | 固定 |
 | 用户名 | `emei_peak` | 系统用户 |
 | sudo 密码 | `11@2358Yh960904FQ` | 同 Gmail 密码 |
+| sudo 无密码 | 已配置 | /etc/sudoers.d/openclaw-agent |
 | SSH | `ssh emei_peak@100.120.109.51` | 通过 Tailscale |
 
 ---

@@ -51,4 +51,12 @@ NVDA, TQQQ, MU, BTC, FIG, KLAR, AIRO, RVI
 
 ---
 
+## ⏰ 重要提醒
+
+### GitHub Token 过期提醒
+**日期:** 2026-12-28  
+**内容:** 提醒 Thomas 延长 GitHub Token 的使用期限 (Token 存储于本地，不在 git 中)
+
+---
+
 *最后更新: 2026-02-23*

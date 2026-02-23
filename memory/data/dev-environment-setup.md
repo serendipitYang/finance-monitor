@@ -67,10 +67,16 @@ gh version 2.87.2
 
 ## ⏳ 待完成
 
-### Docker
-- 已安装但需手动启动 Desktop
-- 启动命令: `open -a Docker`
-- 首次启动需配置
+### Docker ✅
+- 版本: Docker 29.2.1
+- 路径: /Applications/Docker.app
+- CLI: /usr/local/bin/docker
+- 状态: 已安装，首次启动配置中
+
+### Sudo 权限 ✅
+- 无密码 sudo 已配置
+- 配置文件: /etc/sudoers.d/openclaw-agent
+- 允许命令: mkdir, ln, cp, brew, hdiutil, screencapture, systemsetup
 
 ### GitHub 认证
 **方案:** 等待 Thomas 提供方案
