@@ -243,6 +243,7 @@ When you receive a heartbeat poll, check `HEARTBEAT.md` for tasks.
 | Deep research, multi-source info | Spawn `researcher` sub-agent |
 | Browser automation, logins, forms | Spawn `browser-operator` sub-agent |
 | Scripts, code, system config | Spawn `coder` sub-agent |
+| **Personal finance, stocks, alerts** | **Spawn `personal_financial_assistant` sub-agent** |
 
 **After spawning:**
 - Stay lean in main session — don't re-do the work

@@ -64,8 +64,21 @@ memory/
 ## 当前未解决
 
 1. **Browser 工具**：Gateway 级别不稳定，需修复
-2. **Multi-agent**：仅 `main` 存在，sub-agents 未注册
+2. **Multi-agent**：✅ 已配置 researcher, coder, browser-operator, **personal_financial_assistant**
 3. **gog**：未 OAuth 认证
+
+## 🤖 已配置 Sub-Agents
+
+| Agent | 用途 | 模型 |
+|-------|------|------|
+| `researcher` | 深度调研、多源信息 | Claude Sonnet 4.6 |
+| `coder` | 代码、脚本、系统配置 | Claude Sonnet 4.6 |
+| `browser-operator` | 浏览器自动化 | Claude Sonnet 4.6 |
+| `personal_financial_assistant` | **股票监控、价格警报、财务分析** | Claude Sonnet 4.6 |
+
+**Finance 任务分水岭：**
+- 所有股票监控、价格检查、财务分析任务 → 委派给 `personal_financial_assistant`
+- 主会话只接收汇总报告，不处理细节
 
 ---
 
